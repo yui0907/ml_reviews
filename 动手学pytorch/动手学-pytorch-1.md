@@ -1,11 +1,3 @@
----
-title: 动手学 pytorch-实现线性回归、softmax、感知机、RNN
-date: 2020-02-13 23:43:39
-catalog: true
-doc :true
-tags:
----
-
 ## tensor 基础
 
 
