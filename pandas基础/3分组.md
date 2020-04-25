@@ -84,7 +84,7 @@ df.head(3)
 #### (a) 在所有重量超过1克拉的钻石中，价格的极差是多少？
 
 ```python
-df.groupby(lambda x : '>1克拉' if df.loc[x,'carat']>1.0 else '<=1克拉').carat.agg(lambda x:x.max()-x.min())
+df.groupby(lambda x : '>1克拉' if df.loc[x,'carat']>1.0 else '<=1克拉').price.agg(lambda x:x.max()-x.min())
 ```
 
 #### (b) 若以开采深度的0.2\0.4\0.6\0.8分位数为分组依据，每一组中钻石颜色最多的是哪一种？该种颜色是组内平均而言单位重量最贵的吗？
@@ -114,12 +114,12 @@ sorted_df=df.groupby('carat_cuts').apply(lambda x:x.sort_values('depth')).reset_
 tp=sorted_df.groupby('carat_cuts').apply(lambda x: pd.DataFrame({'carat_cuts':x['carat_cuts'],'price':x['price'],'is_f':x['price'].diff()>0,'continuous':((x['price'].diff()>0)!=(x['price'].diff()>0).shift()).cumsum()} ))
 tp.loc[tp.is_f==True,:].groupby(['carat_cuts','continuous']).price.agg(['count']).reset_index().groupby('carat_cuts').max()
 
-##严格递增最大序列长度如下
-#(0.0, 0.5]	7
-#(0.5, 1.0]	7
-#(1.0, 1.5]	6
-#(1.5, 2.0]	10
-#(2.0, 6.0]	6
+##因为没有计算序列第一个值。严格递增最大序列长度在max的基础上+1，结果如下.
+#(0.0, 0.5]	8
+#(0.5, 1.0]	8
+#(1.0, 1.5]	7
+#(1.5, 2.0]	11
+#(2.0, 6.0]	7
 
 ```
 
@@ -144,4 +144,8 @@ for  c in colors:
 # color D的 参数为k=[[8408.35312588]],b=[[-2361.01715228]]
 # color I的 参数为k=[[7761.04116881]],b=[[-2878.15035558]]
 # color J的 参数为k=[[7094.19209226]],b=[[-2920.60333719]]
+```
+
+```python
+
 ```
