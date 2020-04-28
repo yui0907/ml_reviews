@@ -22,7 +22,7 @@ df.head(3)
 
 
 - pivot_table等压缩数据的变形函数会导致多级索引；比如当传入单级行列值但是传入聚合参数后，相当于将columns先pivot后进行分组。在列索引上有了2级索引； 当传入多个行列值，也会导致多级索引
-- stack、melt等展开函数可以将多级索引变为1级索引
+- stack可以指定层级压缩，将多级索引变为1级索引
 
 ```python
 res=pd.pivot_table(df,index='School',columns='Gender',values='Height',aggfunc=['mean','sum'])
