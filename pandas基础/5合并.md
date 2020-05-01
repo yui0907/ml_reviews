@@ -251,10 +251,11 @@ df2.head(2)
 #### (a) 将两张表分别拆分为专业课与非专业课（结果为四张表）。
 
 ```python
-df1_pro=df1.loc[df1['课程类别']=='专业选修课']
-df1_unpro=df1.loc[df1['课程类别']!='专业选修课']
-df2_pro=df2.loc[df2['课程类别']=='专业选修课']
-df2_unpro=df2.loc[df2['课程类别']!='专业选修课']
+tp=['学科基础课','专业必修课','专业选修课']
+df1_pro=df1.loc[df1['课程类别'].isin(tp)]
+df1_unpro=df1.loc[~df1['课程类别'].isin(tp)]
+df2_pro=df2.loc[df2['课程类别'].isin(tp)]
+df2_unpro=df2.loc[~df2['课程类别'].isin(tp)]
 ```
 
 #### (b) 将两张专业课的分数表和两张非专业课的分数表分别合并。
@@ -268,19 +269,19 @@ df_unpro=pd.concat([df1_unpro,df2_unpro])
 
 ```python
 df=pd.concat([df1,df2])
-df_pro=df.loc[df['课程类别']=='专业选修课']
-df_unpro=df.loc[df['课程类别']!='专业选修课']
+df_pro=df.loc[df['课程类别'].isin(tp)]
+df_unpro=df.loc[~df['课程类别'].isin(tp)]
 ```
 
 #### (d) 专业课程中有缺失值吗，如果有的话请在完成(3)的同时，用组内（3种类型的专业课）均值填充缺失值后拆分。
 
 ```python
-df.isnull().sum()  
+df_pro.isnull().sum()  
 #分数有3个缺失值
 ```
 
 ```python
-df['分数'] = df.groupby('课程类别')['分数'] .transform(lambda x: x.fillna(x.mean()))
+df_pro['分数'] =df_pro.groupby('课程类别')['分数'] .transform(lambda x: x.fillna(x.mean()))
 ```
 
 ```python
