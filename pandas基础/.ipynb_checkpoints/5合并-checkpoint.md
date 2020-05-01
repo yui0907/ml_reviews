@@ -217,8 +217,8 @@ tmp2=df2[df2.Name.isin(lst)].sort_values(by='Name').reset_index(drop=True)
 
 ```python
 def clg(l,m):
-    a=tmp1.loc[tmp1.Name==l,'Age'].values
-    b=tmp2.loc[tmp2.Name==l,'Age'].values
+    a=tmp1.loc[tmp1.Name==l,m].values
+    b=tmp2.loc[tmp2.Name==l,m].values
     c=rr.loc[tmp1.loc[tmp1.Name==l,'Company']][m].values
     t=[abs(a/c-1),abs(b/c-1)]
     return [a,b][t.index(min(t))]
@@ -282,8 +282,4 @@ df_pro.isnull().sum()
 
 ```python
 df_pro['分数'] =df_pro.groupby('课程类别')['分数'] .transform(lambda x: x.fillna(x.mean()))
-```
-
-```python
-
 ```
