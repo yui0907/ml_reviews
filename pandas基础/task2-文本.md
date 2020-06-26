@@ -1,4 +1,5 @@
 ## 问题与练习
+
 ### 1. 问题
 
 #### 【问题一】 str对象方法和df/Series对象方法有什么区别？
@@ -12,7 +13,9 @@
 ```
 
 ### 2. 练习
+
 #### 【练习一】 现有一份关于字符串的数据集，请解决以下问题：
+
 #### （a）现对字符串编码存储人员信息（在编号后添加ID列），使用如下格式：“×××（名字）：×国人，性别×，生于×年×月×日”
 
 
@@ -25,21 +28,8 @@ df.head()
 
 
 
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -109,15 +99,14 @@ df.head()
     </tr>
   </tbody>
 </table>
-</div>
 
+</div>
 
 
 
 ```python
 df['ID']=df['姓名']+':'+df['国籍']+'国人，性别'+df['性别']+'，生于'+df['出生年']+'年'+df['出生月']+'月'+df['出生日']+'日'
 ```
-
 
 ```python
 cols = [df.columns.values[-1]]+list(df.columns.values[:-1])
@@ -127,21 +116,8 @@ df.head()
 
 
 
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -218,15 +194,16 @@ df.head()
     </tr>
   </tbody>
 </table>
+
 </div>
 
 
 
 #### （b）将（a）中的人员生日信息部分修改为用中文表示（如一九七四年十月二十三日），其余返回格式不变。
 
-
 ```python
 dict_map ={'0':'零','1':'一','2':'二','3':'三','4':'四','5':'五','6':'六','7':'七','8':'八','9':'九','10':'十'}
+
 
 def f(x,n=2):
     x=int(x)
@@ -246,7 +223,6 @@ def f(x,n=2):
 df['出生信息'] = df['出生年'].apply(lambda x :f(x,0))+df['出生月'].apply(lambda x:f(x,1))+df['出生日'].apply(lambda x:f(x,2))
 ```
 
-
 ```python
 df=df.iloc[:,[0,1,2,3,7]]
 df.head()
@@ -254,21 +230,9 @@ df.head()
 
 
 
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -331,13 +295,186 @@ df.head()
     </tr>
   </tbody>
 </table>
+
 </div>
 
 
 
 #### （c）将（b）中的ID列结果拆分为原列表相应的5列，并使用equals检验是否一致。
 
+```python
+df2 = pd.read_csv('data/String_data_one.csv',index_col='人员编号').astype('str')
+```
 
 ```python
-
+df2.head(1)
 ```
+
+
+
+<div>
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>姓名</th>
+      <th>国籍</th>
+      <th>性别</th>
+      <th>出生年</th>
+      <th>出生月</th>
+      <th>出生日</th>
+    </tr>
+    <tr>
+      <th>人员编号</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>aesfd</td>
+      <td>2</td>
+      <td>男</td>
+      <td>1942</td>
+      <td>8</td>
+      <td>10</td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+
+
+
+```python
+df.head(1)
+```
+
+
+
+<div>
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>姓名</th>
+      <th>国籍</th>
+      <th>性别</th>
+      <th>出生信息</th>
+    </tr>
+    <tr>
+      <th>人员编号</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>aesfd:2国人，性别男，生于1942年8月10日</td>
+      <td>aesfd</td>
+      <td>2</td>
+      <td>男</td>
+      <td>一九四二年八月十日</td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+
+
+
+```python
+import re 
+mode = re.compile(r'\d+')
+df['姓名'] = df.ID.apply(lambda x:x.split(':')[0])
+df['国籍'] = df.ID.apply( lambda x: re.findall( r'[0-9]',x.split(':')[1].split('，')[0])[0] )
+df['性别'] = df.ID.apply(lambda x:x.split(':')[1].split('，')[1][-1])
+df['出生年'] = df.ID.apply(lambda x:  mode.findall(x.split(':')[1].split('，')[2])[0] )
+df['出生月'] = df.ID.apply(lambda x:  mode.findall(x.split(':')[1].split('，')[2])[1] )
+df['出生日'] = df.ID.apply(lambda x:  mode.findall(x.split(':')[1].split('，')[2])[2] )
+df.head(3)
+```
+
+
+
+<div>
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>姓名</th>
+      <th>国籍</th>
+      <th>性别</th>
+      <th>出生信息</th>
+      <th>出生年</th>
+      <th>出生月</th>
+      <th>出生日</th>
+    </tr>
+    <tr>
+      <th>人员编号</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>aesfd:2国人，性别男，生于1942年8月10日</td>
+      <td>aesfd</td>
+      <td>2</td>
+      <td>男</td>
+      <td>一九四二年八月十日</td>
+      <td>1942</td>
+      <td>8</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>fasefa:5国人，性别女，生于1985年10月4日</td>
+      <td>fasefa</td>
+      <td>5</td>
+      <td>女</td>
+      <td>一九八五年十月四日</td>
+      <td>1985</td>
+      <td>10</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>aeagd:4国人，性别女，生于1946年10月15日</td>
+      <td>aeagd</td>
+      <td>4</td>
+      <td>女</td>
+      <td>一九四六年十月十五日</td>
+      <td>1946</td>
+      <td>10</td>
+      <td>15</td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+
