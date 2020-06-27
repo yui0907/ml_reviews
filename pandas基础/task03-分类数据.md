@@ -1,6 +1,5 @@
 # 第8章 分类数据
 
-
 ```python
 import pandas as pd
 import numpy as np
@@ -10,21 +9,8 @@ df.head()
 
 
 
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -103,14 +89,16 @@ df.head()
     </tr>
   </tbody>
 </table>
+
 </div>
 
 
 
 ## 一、category的创建及其性质
-### 1. 分类变量的创建
-#### （a）用Series创建
 
+### 1. 分类变量的创建
+
+#### （a）用Series创建
 
 ```python
 pd.Series(["a", "b", "c", "a"], dtype="category")
@@ -118,18 +106,18 @@ pd.Series(["a", "b", "c", "a"], dtype="category")
 
 
 
-
-    0    a
-    1    b
-    2    c
-    3    a
-    dtype: category
-    Categories (3, object): [a, b, c]
+```
+0    a
+1    b
+2    c
+3    a
+dtype: category
+Categories (3, object): [a, b, c]
+```
 
 
 
 #### （b）对DataFrame指定类型创建
-
 
 ```python
 temp_df = pd.DataFrame({'A':pd.Series(["a", "b", "c", "a"], dtype="category"),'B':list('abcd')})
@@ -138,15 +126,15 @@ temp_df.dtypes
 
 
 
-
-    A    category
-    B      object
-    dtype: object
+```
+A    category
+B      object
+dtype: object
+```
 
 
 
 #### （c）利用内置Categorical类型创建
-
 
 ```python
 cat = pd.Categorical(["a", "b", "c", "a"], categories=['a','b','c'])
@@ -155,13 +143,14 @@ pd.Series(cat)
 
 
 
-
-    0    a
-    1    b
-    2    c
-    3    a
-    dtype: category
-    Categories (3, object): [a, b, c]
+```
+0    a
+1    b
+2    c
+3    a
+dtype: category
+Categories (3, object): [a, b, c]
+```
 
 
 
@@ -169,21 +158,20 @@ pd.Series(cat)
 
 #### 默认使用区间类型为标签
 
-
 ```python
 pd.cut(np.random.randint(0,60,5), [0,10,30,60])
 ```
 
 
 
-
-    [(10, 30], (0, 10], (10, 30], (30, 60], (30, 60]]
-    Categories (3, interval[int64]): [(0, 10] < (10, 30] < (30, 60]]
+```
+[(10, 30], (0, 10], (10, 30], (30, 60], (30, 60]]
+Categories (3, interval[int64]): [(0, 10] < (10, 30] < (30, 60]]
+```
 
 
 
 #### 可指定字符为标签
-
 
 ```python
 pd.cut(np.random.randint(0,60,5), [0,10,30,60], right=False, labels=['0-10','10-30','30-60'])
@@ -191,19 +179,24 @@ pd.cut(np.random.randint(0,60,5), [0,10,30,60], right=False, labels=['0-10','10-
 
 
 
-
-    [10-30, 30-60, 30-60, 10-30, 30-60]
-    Categories (3, object): [0-10 < 10-30 < 30-60]
+```
+[10-30, 30-60, 30-60, 10-30, 30-60]
+Categories (3, object): [0-10 < 10-30 < 30-60]
+```
 
 
 
 ### 2. 分类变量的结构
-#### 一个分类变量包括三个部分，元素值（values）、分类类别（categories）、是否有序（order）
-#### 从上面可以看出，使用cut函数创建的分类变量默认为有序分类变量
-#### 下面介绍如何获取或修改这些属性
-#### （a）describe方法
-#### 该方法描述了一个分类序列的情况，包括非缺失值个数、元素值类别数（不是分类类别数）、最多次出现的元素及其频数
 
+#### 一个分类变量包括三个部分，元素值（values）、分类类别（categories）、是否有序（order）
+
+#### 从上面可以看出，使用cut函数创建的分类变量默认为有序分类变量
+
+#### 下面介绍如何获取或修改这些属性
+
+#### （a）describe方法
+
+#### 该方法描述了一个分类序列的情况，包括非缺失值个数、元素值类别数（不是分类类别数）、最多次出现的元素及其频数
 
 ```python
 s = pd.Series(pd.Categorical(["a", "b", "c", "a",np.nan], categories=['a','b','c','d']))
@@ -212,325 +205,347 @@ s.describe()
 
 
 
-
-    count     4
-    unique    3
-    top       a
-    freq      2
-    dtype: object
-
-
-
-#### （b）categories和ordered属性
-#### 查看分类类别和是否排序
-
-
-```python
-s.cat.categories
+```
+count     4
+unique    3
+top       a
+freq      2
+dtype: object
 ```
 
 
 
+#### （b）categories和ordered属性
 
-    Index(['a', 'b', 'c', 'd'], dtype='object')
+#### 查看分类类别和是否排序
 
+```python
+s.cat.categories
+
+```
+
+
+
+```
+Index(['a', 'b', 'c', 'd'], dtype='object')
+
+```
 
 
 
 ```python
 s.cat.ordered
+
 ```
 
 
 
+```
+False
 
-    False
+```
 
 
 
 ### 3. 类别的修改
 
 #### （a）利用set_categories修改
-#### 修改分类，但本身值不会变化
 
+#### 修改分类，但本身值不会变化
 
 ```python
 s = pd.Series(pd.Categorical(["a", "b", "c", "a",np.nan], categories=['a','b','c','d']))
 s.cat.set_categories(['new_a','c'])
+
 ```
 
 
 
+```
+0    NaN
+1    NaN
+2      c
+3    NaN
+4    NaN
+dtype: category
+Categories (2, object): [new_a, c]
 
-    0    NaN
-    1    NaN
-    2      c
-    3    NaN
-    4    NaN
-    dtype: category
-    Categories (2, object): [new_a, c]
+```
 
 
 
 #### （b）利用rename_categories修改
-#### 需要注意的是该方法会把值和分类同时修改
 
+#### 需要注意的是该方法会把值和分类同时修改
 
 ```python
 s = pd.Series(pd.Categorical(["a", "b", "c", "a",np.nan], categories=['a','b','c','d']))
 s.cat.rename_categories(['new_%s'%i for i in s.cat.categories])
+
 ```
 
 
 
+```
+0    new_a
+1    new_b
+2    new_c
+3    new_a
+4      NaN
+dtype: category
+Categories (4, object): [new_a, new_b, new_c, new_d]
 
-    0    new_a
-    1    new_b
-    2    new_c
-    3    new_a
-    4      NaN
-    dtype: category
-    Categories (4, object): [new_a, new_b, new_c, new_d]
+```
 
 
 
 #### 利用字典修改值
 
-
 ```python
 s.cat.rename_categories({'a':'new_a','b':'new_b'})
+
 ```
 
 
 
+```
+0    new_a
+1    new_b
+2        c
+3    new_a
+4      NaN
+dtype: category
+Categories (4, object): [new_a, new_b, c, d]
 
-    0    new_a
-    1    new_b
-    2        c
-    3    new_a
-    4      NaN
-    dtype: category
-    Categories (4, object): [new_a, new_b, c, d]
+```
 
 
 
 #### （c）利用add_categories添加
 
-
 ```python
 s = pd.Series(pd.Categorical(["a", "b", "c", "a",np.nan], categories=['a','b','c','d']))
 s.cat.add_categories(['e'])
+
 ```
 
 
 
+```
+0      a
+1      b
+2      c
+3      a
+4    NaN
+dtype: category
+Categories (5, object): [a, b, c, d, e]
 
-    0      a
-    1      b
-    2      c
-    3      a
-    4    NaN
-    dtype: category
-    Categories (5, object): [a, b, c, d, e]
+```
 
 
 
 #### （d）利用remove_categories移除
 
-
 ```python
 s = pd.Series(pd.Categorical(["a", "b", "c", "a",np.nan], categories=['a','b','c','d']))
 s.cat.remove_categories(['d'])
+
 ```
 
 
 
+```
+0      a
+1      b
+2      c
+3      a
+4    NaN
+dtype: category
+Categories (3, object): [a, b, c]
 
-    0      a
-    1      b
-    2      c
-    3      a
-    4    NaN
-    dtype: category
-    Categories (3, object): [a, b, c]
+```
 
 
 
 #### （e）删除元素值未出现的分类类型
 
-
 ```python
 s = pd.Series(pd.Categorical(["a", "b", "c", "a",np.nan], categories=['a','b','c','d']))
 s.cat.remove_unused_categories()
+
 ```
 
 
 
+```
+0      a
+1      b
+2      c
+3      a
+4    NaN
+dtype: category
+Categories (3, object): [a, b, c]
 
-    0      a
-    1      b
-    2      c
-    3      a
-    4    NaN
-    dtype: category
-    Categories (3, object): [a, b, c]
+```
 
 
 
 ## 二、分类变量的排序
+
 #### 前面提到，分类数据类型被分为有序和无序，这非常好理解，例如分数区间的高低是有序变量，考试科目的类别一般看做无序变量
 
 ### 1. 序的建立
 
 #### （a）一般来说会将一个序列转为有序变量，可以利用as_ordered方法
 
-
 ```python
 s = pd.Series(["a", "d", "c", "a"]).astype('category').cat.as_ordered()
 s
+
 ```
 
 
 
+```
+0    a
+1    d
+2    c
+3    a
+dtype: category
+Categories (3, object): [a < c < d]
 
-    0    a
-    1    d
-    2    c
-    3    a
-    dtype: category
-    Categories (3, object): [a < c < d]
+```
 
 
 
 #### 退化为无序变量，只需要使用as_unordered
 
-
 ```python
 s.cat.as_unordered()
+
 ```
 
 
 
+```
+0    a
+1    d
+2    c
+3    a
+dtype: category
+Categories (3, object): [a, c, d]
 
-    0    a
-    1    d
-    2    c
-    3    a
-    dtype: category
-    Categories (3, object): [a, c, d]
+```
 
 
 
 #### （b）利用set_categories方法中的order参数
 
-
 ```python
 pd.Series(["a", "d", "c", "a"]).astype('category').cat.set_categories(['a','c','d'],ordered=True)
+
 ```
 
 
 
+```
+0    a
+1    d
+2    c
+3    a
+dtype: category
+Categories (3, object): [a < c < d]
 
-    0    a
-    1    d
-    2    c
-    3    a
-    dtype: category
-    Categories (3, object): [a < c < d]
+```
 
 
 
 #### （c）利用reorder_categories方法
-#### 这个方法的特点在于，新设置的分类必须与原分类为同一集合
 
+#### 这个方法的特点在于，新设置的分类必须与原分类为同一集合
 
 ```python
 s = pd.Series(["a", "d", "c", "a"]).astype('category')
 s.cat.reorder_categories(['a','c','d'],ordered=True)
+
 ```
 
 
 
+```
+0    a
+1    d
+2    c
+3    a
+dtype: category
+Categories (3, object): [a < c < d]
 
-    0    a
-    1    d
-    2    c
-    3    a
-    dtype: category
-    Categories (3, object): [a < c < d]
-
+```
 
 
 
 ```python
 #s.cat.reorder_categories(['a','c'],ordered=True) #报错
 #s.cat.reorder_categories(['a','c','d','e'],ordered=True) #报错
+
 ```
 
 ### 2. 排序
 
 #### 先前在第1章介绍的值排序和索引排序都是适用的
 
-
 ```python
 s = pd.Series(np.random.choice(['perfect','good','fair','bad','awful'],50)).astype('category')
 s.cat.set_categories(['perfect','good','fair','bad','awful'][::-1],ordered=True).head()
+
 ```
 
 
 
+```
+0       good
+1       fair
+2        bad
+3    perfect
+4    perfect
+dtype: category
+Categories (5, object): [awful < bad < fair < good < perfect]
 
-    0       good
-    1       fair
-    2        bad
-    3    perfect
-    4    perfect
-    dtype: category
-    Categories (5, object): [awful < bad < fair < good < perfect]
-
+```
 
 
 
 ```python
 s.sort_values(ascending=False).head()
+
 ```
 
 
 
+```
+29    perfect
+17    perfect
+31    perfect
+3     perfect
+4     perfect
+dtype: category
+Categories (5, object): [awful, bad, fair, good, perfect]
 
-    29    perfect
-    17    perfect
-    31    perfect
-    3     perfect
-    4     perfect
-    dtype: category
-    Categories (5, object): [awful, bad, fair, good, perfect]
-
+```
 
 
 
 ```python
 df_sort = pd.DataFrame({'cat':s.values,'value':np.random.randn(50)}).set_index('cat')
 df_sort.head()
+
 ```
 
 
 
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -565,32 +580,22 @@ df_sort.head()
     </tr>
   </tbody>
 </table>
-</div>
 
+</div>
 
 
 
 ```python
 df_sort.sort_index().head()
+
 ```
 
 
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -625,6 +630,7 @@ df_sort.sort_index().head()
     </tr>
   </tbody>
 </table>
+
 </div>
 
 
@@ -635,7 +641,6 @@ df_sort.sort_index().head()
 
 #### （a）标量比较
 
-
 ```python
 s = pd.Series(["a", "d", "c", "a"]).astype('category')
 s == 'a'
@@ -643,17 +648,17 @@ s == 'a'
 
 
 
-
-    0     True
-    1    False
-    2    False
-    3     True
-    dtype: bool
+```
+0     True
+1    False
+2    False
+3     True
+dtype: bool
+```
 
 
 
 #### （b）等长序列比较
-
 
 ```python
 s == list('abcd')
@@ -661,105 +666,118 @@ s == list('abcd')
 
 
 
-
-    0     True
-    1    False
-    2     True
-    3    False
-    dtype: bool
+```
+0     True
+1    False
+2     True
+3    False
+dtype: bool
+```
 
 
 
 ### 2. 与另一分类变量的比较
 
 #### （a）等式判别（包含等号和不等号）
-#### 两个分类变量的等式判别需要满足分类完全相同
 
+#### 两个分类变量的等式判别需要满足分类完全相同
 
 ```python
 s = pd.Series(["a", "d", "c", "a"]).astype('category')
 s == s
+
 ```
 
 
 
+```
+0    True
+1    True
+2    True
+3    True
+dtype: bool
 
-    0    True
-    1    True
-    2    True
-    3    True
-    dtype: bool
-
+```
 
 
 
 ```python
 s != s
+
 ```
 
 
 
+```
+0    False
+1    False
+2    False
+3    False
+dtype: bool
 
-    0    False
-    1    False
-    2    False
-    3    False
-    dtype: bool
-
+```
 
 
 
 ```python
 s_new = s.cat.set_categories(['a','d','e'])
 #s == s_new #报错
+
 ```
 
 #### （b）不等式判别（包含>=,<=,<,>）
-#### 两个分类变量的不等式判别需要满足两个条件：① 分类完全相同 ② 排序完全相同
 
+#### 两个分类变量的不等式判别需要满足两个条件：① 分类完全相同 ② 排序完全相同
 
 ```python
 s = pd.Series(["a", "d", "c", "a"]).astype('category')
 #s >= s #报错
-```
 
+```
 
 ```python
 s = pd.Series(["a", "d", "c", "a"]).astype('category').cat.reorder_categories(['a','c','d'],ordered=True)
 s >= s
+
 ```
 
 
 
+```
+0    True
+1    True
+2    True
+3    True
+dtype: bool
 
-    0    True
-    1    True
-    2    True
-    3    True
-    dtype: bool
+```
 
 
 
 ## 四、问题与练习
 
 #### 【问题一】 如何使用union_categoricals方法？它的作用是什么？
-#### 【问题二】 利用concat方法将两个序列纵向拼接，它的结果一定是分类变量吗？什么情况下不是？
-#### 【问题三】 当使用groupby方法或者value_counts方法时，分类变量的统计结果和普通变量有什么区别？
-#### 【问题四】 下面的代码说明了Series创建分类变量的什么“缺陷”？如何避免？（提示：使用Series中的copy参数）
 
+#### 【问题二】 利用concat方法将两个序列纵向拼接，它的结果一定是分类变量吗？什么情况下不是？
+
+#### 【问题三】 当使用groupby方法或者value_counts方法时，分类变量的统计结果和普通变量有什么区别？
+
+#### 【问题四】 下面的代码说明了Series创建分类变量的什么“缺陷”？如何避免？（提示：使用Series中的copy参数）
 
 ```python
 cat = pd.Categorical([1, 2, 3, 10], categories=[1, 2, 3, 4, 10])
 s = pd.Series(cat, name="cat")
 cat
+
 ```
 
 
 
+```
+[1, 2, 3, 10]
+Categories (5, int64): [1, 2, 3, 4, 10]
 
-    [1, 2, 3, 10]
-    Categories (5, int64): [1, 2, 3, 4, 10]
-
+```
 
 
 
@@ -770,39 +788,29 @@ cat
 
 
 
-
-    [10, 10, 3, 10]
-    Categories (5, int64): [1, 2, 3, 4, 10]
+```
+[10, 10, 3, 10]
+Categories (5, int64): [1, 2, 3, 4, 10]
+```
 
 
 
 #### 【练习一】 现继续使用第四章中的地震数据集，请解决以下问题：
-#### （a）现在将深度分为七个等级：[0,5,10,15,20,30,50,np.inf]，请以深度等级Ⅰ,Ⅱ,Ⅲ,Ⅳ,Ⅴ,Ⅵ,Ⅶ为索引并按照由浅到深的顺序进行排序。
 
+#### （a）现在将深度分为七个等级：[0,5,10,15,20,30,50,np.inf]，请以深度等级Ⅰ,Ⅱ,Ⅲ,Ⅳ,Ⅴ,Ⅵ,Ⅶ为索引并按照由浅到深的顺序进行排序。
 
 ```python
 import pandas as pd
+import numpy as np
 df = pd.read_csv('data/Earthquake.csv')
 df.head(3)
 ```
 
 
 
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -853,24 +861,194 @@ df.head(3)
     </tr>
   </tbody>
 </table>
+
+</div>
+
+
+
+```python
+df_a = df.copy()
+df_a['深度'] = pd.cut(df_a['深度'], [-1e-10,5,10,15,20,30,50,np.inf],labels=['Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ','Ⅵ','Ⅶ'])
+df_a.set_index('深度').sort_index().head()
+
+```
+
+
+
+<div>
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>日期</th>
+      <th>时间</th>
+      <th>维度</th>
+      <th>经度</th>
+      <th>方向</th>
+      <th>距离</th>
+      <th>烈度</th>
+    </tr>
+    <tr>
+      <th>深度</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Ⅰ</th>
+      <td>2009.09.09</td>
+      <td>12:54:13 AM</td>
+      <td>42.42</td>
+      <td>43.03</td>
+      <td>north_east</td>
+      <td>95.4</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Ⅰ</th>
+      <td>1997.06.16</td>
+      <td>12:18:04 AM</td>
+      <td>37.92</td>
+      <td>29.17</td>
+      <td>north_east</td>
+      <td>3.2</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Ⅰ</th>
+      <td>2011.10.25</td>
+      <td>12:29:45 AM</td>
+      <td>38.96</td>
+      <td>43.64</td>
+      <td>south_east</td>
+      <td>1.6</td>
+      <td>3.9</td>
+    </tr>
+    <tr>
+      <th>Ⅰ</th>
+      <td>1995.07.23</td>
+      <td>12:05:04 AM</td>
+      <td>37.61</td>
+      <td>29.29</td>
+      <td>north_east</td>
+      <td>3.2</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Ⅰ</th>
+      <td>2013.06.10</td>
+      <td>12:39:19 AM</td>
+      <td>38.53</td>
+      <td>43.85</td>
+      <td>south_east</td>
+      <td>1.6</td>
+      <td>3.7</td>
+    </tr>
+  </tbody>
+</table>
+
 </div>
 
 
 
 #### （b）在（a）的基础上，将烈度分为4个等级：[0,3,4,5,np.inf]，依次对南部地区的深度和烈度等级建立多级索引排序。
 
-
 ```python
-
+df_a['烈度'] = pd.cut(df_a['烈度'], [-1e-10,3,4,5,np.inf],labels=['Ⅰ','Ⅱ','Ⅲ','Ⅳ'])
+df_a.set_index(['深度','烈度']).sort_index().head()
 ```
 
 
-```python
 
-```
+<div>
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>日期</th>
+      <th>时间</th>
+      <th>维度</th>
+      <th>经度</th>
+      <th>方向</th>
+      <th>距离</th>
+    </tr>
+    <tr>
+      <th>深度</th>
+      <th>烈度</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="5" valign="top">Ⅰ</th>
+      <th>Ⅰ</th>
+      <td>1978.05.07</td>
+      <td>12:41:37 AM</td>
+      <td>38.58</td>
+      <td>27.61</td>
+      <td>south_west</td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <th>Ⅰ</th>
+      <td>2000.02.07</td>
+      <td>12:11:45 AM</td>
+      <td>40.05</td>
+      <td>34.07</td>
+      <td>south_east</td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <th>Ⅰ</th>
+      <td>1971.05.20</td>
+      <td>12:08:46 AM</td>
+      <td>37.72</td>
+      <td>30.00</td>
+      <td>north_east</td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <th>Ⅰ</th>
+      <td>1985.01.28</td>
+      <td>12:20:56 AM</td>
+      <td>38.85</td>
+      <td>29.06</td>
+      <td>north_east</td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <th>Ⅰ</th>
+      <td>1990.07.05</td>
+      <td>12:43:04 AM</td>
+      <td>37.87</td>
+      <td>29.18</td>
+      <td>east</td>
+      <td>0.1</td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+
+
 
 #### 【练习二】 对于分类变量而言，调用第4章中的变形函数会出现一个BUG（目前的版本下还未修复）：例如对于crosstab函数，按照[官方文档的说法](https://pandas.pydata.org/pandas-docs/version/1.0.0/user_guide/reshaping.html#cross-tabulations)，即使没有出现的变量也会在变形后的汇总结果中出现，但事实上并不是这样，比如下面的例子就缺少了原本应该出现的行'c'和列'f'。基于这一问题，请尝试设计my_crosstab函数，在功能上能够返回正确的结果。
-
 
 ```python
 foo = pd.Categorical(['a', 'b'], categories=['a', 'b', 'c'])
@@ -880,21 +1058,9 @@ pd.crosstab(foo, bar)
 
 
 
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -921,6 +1087,69 @@ pd.crosstab(foo, bar)
     </tr>
   </tbody>
 </table>
+
 </div>
 
 
+
+```python
+def my_crosstab(foo,bar):
+    num = len(foo)
+    s1 = pd.Series([i for i in list(foo.categories.union(set(foo)))],name='1nd var')
+    s2 = [i for i in list(bar.categories.union(set(bar)))]
+    df = pd.DataFrame({i:[0]*len(s1) for i in s2},index=s1)
+    for i in range(num):
+        df.at[foo[i],bar[i]] += 1
+    return df.rename_axis('2st var',axis=1)
+my_crosstab(foo,bar)
+```
+
+
+
+<div>
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>2st var</th>
+      <th>d</th>
+      <th>e</th>
+      <th>f</th>
+    </tr>
+    <tr>
+      <th>1nd var</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>a</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>b</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>c</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+
+
+
+```python
+
+```
