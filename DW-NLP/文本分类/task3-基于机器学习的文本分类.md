@@ -54,7 +54,7 @@ test_df  =  pd.read_csv('test_a.csv',sep='\t')
 
 TFIDF+RidgeClassifier ：稍微有点偏向样本多的情况；7-13的正确率基本都在0.9以下。但是没有过度偏倚。
 
-<img src="1.png" alt="下载" style="zoom: 67%;" />
+<img src="1.png" alt="1" style="zoom: 67%;" />
 
 ### 代码
 
